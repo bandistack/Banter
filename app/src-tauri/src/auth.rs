@@ -2,6 +2,7 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use reqwest::Response;
 use crate::api::post_form;
+use crate::store::RefreshTokenStore;
 
 #[derive(Deserialize, Serialize, Debug)]
 pub struct TokenResponse {
@@ -30,7 +31,12 @@ pub async fn exchange_token(code: String) -> Result<TokenResponse, String> {
         .await
         .map_err(|e| e.to_string())?;
     if res.status().is_success() {
-        res.json::<TokenResponse>().await.map_err(|e| e.to_string())
+        let token_response = res.json::<TokenResponse>().await.map_err(|e| e.to_string())?;
+        if let Some(refresh) = &token_response.refresh_token { 
+            let store = RefreshTokenStore::new().map_err(|e| e.to_string())?;
+            store.save(refresh).map_err(|e| e.to_string())?;
+        }
+        Ok(TokenResponse { access_token: token_response.access_token, refresh_token: None, expires_in: token_response.expires_in, scope: token_response.scope, token_type: token_response.token_type, })
     } else {
         Err(format!("HTTP error: {}", res.status()))
     }

@@ -1,5 +1,5 @@
 <script lang="ts">
-import { getAuthUrl } from '$lib/auth';
+import { getAuthUrl } from '$lib/url';
 
 async function loginWithTwitch(): Promise<void> {
     window.location.href = getAuthUrl();

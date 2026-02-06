@@ -1,6 +1,5 @@
-// Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-// Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 mod api;
+mod store;
 mod auth;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]

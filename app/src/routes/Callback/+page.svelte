@@ -2,13 +2,23 @@
   import { onMount } from "svelte";
   import { invoke } from "@tauri-apps/api/core";
   import { goto } from '$app/navigation';
+  import { statusMessage } from "$lib/status";
+  import { type UserToken } from "$lib/token";
+  import { UserTokenPersistence } from "$lib/persistence";
 
   onMount(async () => {
     const code = new URLSearchParams(window.location.search).get("code");
     if (code) {
       try {
-        const token = await invoke("exchange_token", { code });
-        goto("/Chat");
+        const token: UserToken = await invoke("exchange_token", { code });
+        if (token?.access_token) {
+          UserTokenPersistence.save(token);
+          statusMessage.set({ type: "success", text: "Login success" });
+          goto("/Chat");
+        } else {
+          statusMessage.set({ type: "error", text: "Invalid Token" });
+          goto("/Login");
+        }
       } catch (err) {
         console.error("Error al intercambiar token:", err);
       }
