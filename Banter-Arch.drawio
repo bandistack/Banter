@@ -10,36 +10,36 @@
         <mxCell id="SwwiN2xEgcjWBLxQpnEN-21" edge="1" parent="SwwiN2xEgcjWBLxQpnEN-2" source="SwwiN2xEgcjWBLxQpnEN-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" target="SwwiN2xEgcjWBLxQpnEN-9">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
+        <mxCell id="gLw5HdHx7bVDJXLO3cPo-1" edge="1" parent="SwwiN2xEgcjWBLxQpnEN-2" source="SwwiN2xEgcjWBLxQpnEN-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;startArrow=classic;startFill=1;" target="SwwiN2xEgcjWBLxQpnEN-19">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
         <mxCell id="SwwiN2xEgcjWBLxQpnEN-3" parent="SwwiN2xEgcjWBLxQpnEN-2" style="swimlane;startSize=0;" value="" vertex="1">
-          <mxGeometry height="190" width="140" x="265" y="30" as="geometry">
+          <mxGeometry height="140" width="140" x="265" y="70" as="geometry">
             <mxRectangle height="40" width="50" x="265" y="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="SwwiN2xEgcjWBLxQpnEN-4" parent="SwwiN2xEgcjWBLxQpnEN-3" style="rounded=0;whiteSpace=wrap;html=1;" value="Chat Window" vertex="1">
+        <mxCell id="SwwiN2xEgcjWBLxQpnEN-4" parent="SwwiN2xEgcjWBLxQpnEN-3" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" value="Twitch Login" vertex="1">
           <mxGeometry height="30" width="90" x="25" y="30" as="geometry" />
         </mxCell>
-        <mxCell id="SwwiN2xEgcjWBLxQpnEN-5" parent="SwwiN2xEgcjWBLxQpnEN-3" style="rounded=0;whiteSpace=wrap;html=1;" value="User Settings" vertex="1">
+        <mxCell id="SwwiN2xEgcjWBLxQpnEN-5" parent="SwwiN2xEgcjWBLxQpnEN-3" style="rounded=0;whiteSpace=wrap;html=1;" value="Chat/Settings" vertex="1">
           <mxGeometry height="30" width="90" x="25" y="80" as="geometry" />
-        </mxCell>
-        <mxCell id="SwwiN2xEgcjWBLxQpnEN-8" parent="SwwiN2xEgcjWBLxQpnEN-3" style="rounded=0;whiteSpace=wrap;html=1;" value="Branding" vertex="1">
-          <mxGeometry height="30" width="90" x="25" y="130" as="geometry" />
         </mxCell>
         <mxCell id="SwwiN2xEgcjWBLxQpnEN-25" edge="1" parent="SwwiN2xEgcjWBLxQpnEN-2" source="SwwiN2xEgcjWBLxQpnEN-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" target="SwwiN2xEgcjWBLxQpnEN-13">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="SwwiN2xEgcjWBLxQpnEN-30" edge="1" parent="SwwiN2xEgcjWBLxQpnEN-2" source="SwwiN2xEgcjWBLxQpnEN-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="SwwiN2xEgcjWBLxQpnEN-19">
+        <mxCell id="SwwiN2xEgcjWBLxQpnEN-30" edge="1" parent="SwwiN2xEgcjWBLxQpnEN-2" source="SwwiN2xEgcjWBLxQpnEN-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=classic;startFill=1;" target="SwwiN2xEgcjWBLxQpnEN-19">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="SwwiN2xEgcjWBLxQpnEN-9" parent="SwwiN2xEgcjWBLxQpnEN-2" style="swimlane;startSize=0;" value="" vertex="1">
           <mxGeometry height="190" width="140" x="265" y="250" as="geometry" />
         </mxCell>
-        <mxCell id="SwwiN2xEgcjWBLxQpnEN-10" parent="SwwiN2xEgcjWBLxQpnEN-9" style="rounded=0;whiteSpace=wrap;html=1;" value="Twitch Client" vertex="1">
+        <mxCell id="SwwiN2xEgcjWBLxQpnEN-10" parent="SwwiN2xEgcjWBLxQpnEN-9" style="rounded=0;whiteSpace=wrap;html=1;" value="Twitch Auth" vertex="1">
           <mxGeometry height="30" width="90" x="25" y="30" as="geometry" />
         </mxCell>
         <mxCell id="SwwiN2xEgcjWBLxQpnEN-11" parent="SwwiN2xEgcjWBLxQpnEN-9" style="rounded=0;whiteSpace=wrap;html=1;" value="Message Parser" vertex="1">
           <mxGeometry height="30" width="90" x="25" y="80" as="geometry" />
         </mxCell>
-        <mxCell id="SwwiN2xEgcjWBLxQpnEN-12" parent="SwwiN2xEgcjWBLxQpnEN-9" style="rounded=0;whiteSpace=wrap;html=1;" value="Event Sender" vertex="1">
+        <mxCell id="SwwiN2xEgcjWBLxQpnEN-12" parent="SwwiN2xEgcjWBLxQpnEN-9" style="rounded=0;whiteSpace=wrap;html=1;" value="Storage sender" vertex="1">
           <mxGeometry height="30" width="90" x="25" y="130" as="geometry" />
         </mxCell>
         <mxCell id="SwwiN2xEgcjWBLxQpnEN-27" edge="1" parent="SwwiN2xEgcjWBLxQpnEN-2" source="SwwiN2xEgcjWBLxQpnEN-13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="SwwiN2xEgcjWBLxQpnEN-23">
@@ -52,7 +52,7 @@
           <mxGeometry height="30" width="90" x="25" y="30" as="geometry" />
         </mxCell>
         <mxCell id="SwwiN2xEgcjWBLxQpnEN-19" parent="SwwiN2xEgcjWBLxQpnEN-2" style="shape=hexagon;perimeter=hexagonPerimeter2;whiteSpace=wrap;html=1;fixedSize=1;" value="Twitch API" vertex="1">
-          <mxGeometry height="80" width="120" x="100" y="305" as="geometry" />
+          <mxGeometry height="80" width="120" x="70" y="210" as="geometry" />
         </mxCell>
         <mxCell id="SwwiN2xEgcjWBLxQpnEN-23" parent="SwwiN2xEgcjWBLxQpnEN-2" style="swimlane;startSize=0;" value="" vertex="1">
           <mxGeometry height="95" width="140" x="265" y="590" as="geometry" />

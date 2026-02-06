@@ -15,7 +15,7 @@
             <mxRectangle height="40" width="50" x="265" y="30" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="SwwiN2xEgcjWBLxQpnEN-4" parent="SwwiN2xEgcjWBLxQpnEN-3" style="rounded=0;whiteSpace=wrap;html=1;" value="Twitch Login" vertex="1">
+        <mxCell id="SwwiN2xEgcjWBLxQpnEN-4" parent="SwwiN2xEgcjWBLxQpnEN-3" style="rounded=0;whiteSpace=wrap;html=1;" value="Chat Window" vertex="1">
           <mxGeometry height="30" width="90" x="25" y="30" as="geometry" />
         </mxCell>
         <mxCell id="SwwiN2xEgcjWBLxQpnEN-5" parent="SwwiN2xEgcjWBLxQpnEN-3" style="rounded=0;whiteSpace=wrap;html=1;" value="User Settings" vertex="1">

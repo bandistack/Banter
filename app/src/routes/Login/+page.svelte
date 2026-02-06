@@ -1,24 +1,15 @@
 <script lang="ts">
-  const clientId: string = "TU_CLIENT_ID";
-  const redirectUri: string = "http://localhost:5173/callback";
-  const scopes: string = "chat:read chat:edit";
+import { getAuthUrl } from '$lib/auth';
 
-  function loginWithTwitch(): void {
-    const url = `https://id.twitch.tv/oauth2/authorize
-      ?client_id=${clientId}
-      &redirect_uri=${encodeURIComponent(redirectUri)}
-      &response_type=code
-      &scope=${encodeURIComponent(scopes)}`;
-    window.location.href = url;
+async function loginWithTwitch(): Promise<void> {
+    window.location.href = getAuthUrl();
   }
 </script>
-
 <div class="flex flex-col h-screen w-screen justify-center items-center p-10 bg-gray-900 text-slate-50">
   <h1 class="text-3xl font-bold mb-8">Log in</h1>
   <button
     on:click={loginWithTwitch}
-    class="flex items-center gap-3 px-4 py-2 bg-purple-800 text-slate-100 rounded-sm hover:bg-purple-700 transition text-sm sm:text-base md:text-lg"
-  >
+    class="flex items-center gap-3 px-4 py-2 bg-purple-800 text-slate-100 rounded-sm hover:bg-purple-700 transition text-sm sm:text-base md:text-lg">
     <span class="leading-none">Log in with Twitch</span>
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2400 2800"
         class="w-6 h-6 fill-current">
