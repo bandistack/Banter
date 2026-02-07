@@ -1,5 +1,5 @@
-import type { UserToken } from "$lib/token";
-import { userToken } from "$lib/token";
+import type { UserToken } from "$lib/usertoken";
+import { userToken } from "$lib/usertoken";
 
 export class UserTokenPersistence {
   private static STORAGE_KEY = "userToken";
