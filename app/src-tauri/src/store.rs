@@ -1,35 +1,50 @@
-use sled::{Db};
+use sled::Db;
+use serde_json;
+use crate::oauth::OAuthClient;
+use once_cell::sync::Lazy;
+use std::sync::Mutex; 
 use std::path::PathBuf;
-use std::str;
 
-pub struct RefreshTokenStore {
+// Instancia única para toda la app
+static STORE: Lazy<Mutex<TokenStore>> = Lazy::new(|| {
+    let store = TokenStore::new().expect("Error inicializando TokenStore");
+    Mutex::new(store)
+});
+
+pub struct TokenStore {
     db: Db,
 }
 
-impl RefreshTokenStore {
-    pub fn new() -> sled::Result<Self> {
-        let mut path = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
-        path.pop();
-        path.push("stg");
-        path.push("tokens");
-        Ok(RefreshTokenStore { db: sled::open(path)? })
+impl TokenStore {
+    pub fn new() -> sled::Result<Self> { 
+        let mut base_path = dirs::data_dir().unwrap_or_else(|| PathBuf::from(".")); 
+        base_path.push("banter_app"); 
+        base_path.push("tokens"); 
+        return Ok(TokenStore { db: sled::open(base_path)? });
+    }
+    pub fn instance() -> std::sync::MutexGuard<'static, TokenStore> {
+        STORE.lock().unwrap()
+    }
+    pub fn save(&self, client: &OAuthClient) -> Result<(), String> {
+        let data = serde_json::to_vec(client).map_err(|e| e.to_string())?;
+        self.db.insert("oauth_client", data).map_err(|e| e.to_string())?;
+        self.db.flush().map_err(|e| e.to_string())?;
+        Ok(())
     }
 
-    pub fn save(&self, token: &str) -> sled::Result<()> {
-        self.db.insert("refresh_token", token.as_bytes())?;
-        self.db.flush()
-            .map(|_| ())
+    pub fn load(&self) -> Result<Option<OAuthClient>, String> {
+        if let Some(ivec) = self.db.get("oauth_client").map_err(|e| e.to_string())? {
+            let client: OAuthClient = serde_json::from_slice(&ivec).map_err(|e| e.to_string())?;
+            Ok(Some(client))
+        } else {
+            Ok(None)
+        }
     }
-    pub fn load(&self) -> sled::Result<Option<String>> { 
-        if let Some(ivec) = self.db.get("refresh_token")? { 
-            Ok(Some(String::from_utf8(ivec.to_vec()).unwrap())) 
-        } else { 
-            Ok(None) 
-        } 
-    }
-    pub fn delete(&self) -> sled::Result<()> {
-        self.db.remove("refresh_token")?;
-        self.db.flush()
-            .map(|_| ())
+
+    pub fn delete(&self) -> Result<(), String> {
+        self.db.remove("oauth_client").map_err(|e| e.to_string())?;
+        self.db.flush().map_err(|e| e.to_string())?;
+        Ok(())
     }
 }
+

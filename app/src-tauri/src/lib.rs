@@ -1,15 +1,16 @@
-mod api;
 mod store;
 mod oauth;
-mod command;
+mod twitch;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
         .invoke_handler(tauri::generate_handler![
-            command::exchange_token,
-            command::refresh_token
+            oauth::exchange_token,
+            oauth::refresh_token,
+            twitch::get_current_user,
+            twitch::start_twitch_chat
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

@@ -1,9 +1,16 @@
 <script lang="ts">
-import { getAuthUrl } from '$lib/url';
-
 async function loginWithTwitch(): Promise<void> {
-    window.location.href = getAuthUrl();
-  }
+  const client_id = import.meta.env.VITE_TWITCH_CLIENT_ID;
+  const redirectUri = import.meta.env.VITE_TWITCH_REDIRECT_URI;
+  const scopes = import.meta.env.VITE_TWITCH_SCOPES;
+  const params = new URLSearchParams({
+    response_type: "code",
+    client_id: client_id,
+    redirect_uri: redirectUri,
+    scope: scopes,
+  });
+  window.location.href = `https://id.twitch.tv/oauth2/authorize?${params.toString()}`;
+}
 </script>
 <div class="flex flex-col h-screen w-screen justify-center items-center p-10 bg-gray-900 text-slate-50">
   <h1 class="text-3xl font-bold mb-8">Log in</h1>
