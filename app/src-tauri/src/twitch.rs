@@ -7,6 +7,10 @@ use serde::{Deserialize, Serialize};
 use crate::store::TokenStore;
 use tauri::Emitter;
 use std::collections::HashMap;
+use std::sync::atomic::{AtomicBool, Ordering};
+
+// Bandera para evitar múltiples conexiones simultáneas
+static IRC_CONNECTED: AtomicBool = AtomicBool::new(false);
 
 #[derive(Deserialize)]
 struct UserResponse {
@@ -55,6 +59,14 @@ async fn get_channel_login(access_token: &str, client_id: &str) -> Result<String
     }
 }
 
+// --- Decodificar valores IRC (URL-encoded) ---
+fn decode_irc_value(value: &str) -> String {
+    value
+        .replace("\\:", ";")
+        .replace("\\s", " ")
+        .replace("\\\\", "\\")
+}
+
 // --- Parser para extraer nick, mensaje y tags de PRIVMSG ---
 fn parse_privmsg(line: &str) -> Option<ChatMessage> {
     // Formato: @tags :nick!user@host PRIVMSG #channel :message
@@ -68,7 +80,7 @@ fn parse_privmsg(line: &str) -> Option<ChatMessage> {
             for tag in tags_str.split(';') {
                 if let Some(eq_pos) = tag.find('=') {
                     let key = tag[..eq_pos].to_string();
-                    let val = tag[eq_pos + 1..].to_string();
+                    let val = decode_irc_value(&tag[eq_pos + 1..]);
                     tags_map.insert(key, val);
                 }
             }
@@ -93,8 +105,8 @@ fn parse_privmsg(line: &str) -> Option<ChatMessage> {
         // Saltar el canal
         if let Some(msg_start) = remaining.find(" :") {
             let message = remaining[msg_start + 2..].to_string();
-            let badges = tags_map.get("badges").cloned();
-            let color = tags_map.get("color").cloned();
+            let badges = tags_map.get("badges").cloned().filter(|b| !b.is_empty());
+            let color = tags_map.get("color").cloned().filter(|c| !c.is_empty());
 
             return Some(ChatMessage {
                 nick,
@@ -178,16 +190,44 @@ pub async fn get_current_user() -> Result<String, String> {
 
 #[tauri::command]
 pub async fn start_twitch_chat(app_handle: AppHandle) -> Result<(), String> {
+    // Si ya hay conexión en progreso, simplemente retornar éxito
+    if IRC_CONNECTED.swap(true, Ordering::SeqCst) {
+        return Ok(());
+    }
+    
     // Cargar token desde el store único
     let client = TokenStore::instance()
         .load()
-        .map_err(|e| e.to_string())?
-        .ok_or("No hay token guardado, inicia OAuth primero")?;
+        .map_err(|e| {
+            IRC_CONNECTED.store(false, Ordering::SeqCst);
+            e.to_string()
+        })?
+        .ok_or_else(|| {
+            IRC_CONNECTED.store(false, Ordering::SeqCst);
+            "No hay token guardado, inicia OAuth primero".to_string()
+        })?;
 
     // Obtener el login del usuario con Helix
-    let client_id = std::env::var("TWITCH_CLIENT_ID").map_err(|e| e.to_string())?;
-    let username = get_channel_login(&client.access_token, &client_id).await?;
+    let client_id = std::env::var("TWITCH_CLIENT_ID").map_err(|e| {
+        IRC_CONNECTED.store(false, Ordering::SeqCst);
+        e.to_string()
+    })?;
+    
+    let username = get_channel_login(&client.access_token, &client_id).await.map_err(|e| {
+        IRC_CONNECTED.store(false, Ordering::SeqCst);
+        e
+    })?;
     let channel = username.clone();
+    let access_token = client.access_token.clone();
 
-    connect_twitch_irc(&client.access_token, &username, &channel, app_handle).await
+    // Lanzar la conexión en background
+    tokio::spawn(async move {
+        if let Err(e) = connect_twitch_irc(&access_token, &username, &channel, app_handle).await {
+            eprintln!("IRC connection error: {}", e);
+        }
+        // Resetear flag cuando termina
+        IRC_CONNECTED.store(false, Ordering::SeqCst);
+    });
+
+    Ok(())
 }
