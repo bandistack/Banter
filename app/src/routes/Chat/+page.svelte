@@ -6,6 +6,8 @@
   import { ensureTokenLife } from "$lib/tokenlife";
   import Navbar from "../Navbar/+page.svelte";
   import MessageInput from "../MessageInput/+page.svelte";
+  import Logout from "../Logout/+page.svelte";
+  import Badges from "../Badges/+page.svelte";
 
   interface ChatMessage {
     nick: string;
@@ -61,17 +63,28 @@
       }
     };
   }
-  function sendMessage() {
-    if (newMessage.trim() !== "") {
-      const userMsg: ChatMessage = {
-        nick: currentUser || "Usuario",
-        message: newMessage,
-        badges: null,
-        color: null,
-        raw: ""
-      };
-      messages = [...messages, userMsg];
-      newMessage = "";
+  async function sendMessage() {
+    if (!newMessage.trim()) return;
+    try {
+      // Mostrar el mensaje inmediatamente en la UI
+      messages = [
+        ...messages,
+        {
+          nick: currentUser,
+          message: newMessage,
+          badges: null,
+          color: null,
+          raw: ""
+        }
+      ];
+      // Enviar al backend
+      await invoke("send_twitch_message", {
+        channel: currentUser,
+        msg: newMessage
+      });
+      newMessage = ""; // limpiar input
+    } catch (err) {
+      console.error("Error enviando mensaje:", err);
     }
   }
 </script>
@@ -85,7 +98,6 @@
     <div class="flex-1 p-4 space-y-2 overflow-y-auto scrollbar-hide" use:autoScroll>
       {#each messages as msg}
         <div class="flex flex-col gap-1 bg-slate-100 dark:bg-slate-950 rounded-sm p-2">
-          <span class="text-slate-500 text-xs dark:text-slate-400 px-2">{msg.badges?.split(",").map(b => b.split("/")[0]).join(" ")}</span>
           <div class="flex items-start gap-2 bg-slate-100 dark:bg-slate-950 rounded-sm p-2">
             <span class="font-bold" style={msg.color ? `color: ${msg.color}` : ""}>{msg.nick}</span>
             <span class="break-all max-w-full overflow-hidden">{msg.message}</span>
@@ -94,12 +106,18 @@
       {/each}
     </div>
     <!-- Input -->
-    <MessageInput bind:value={newMessage} on:send={sendMessage} placeholder="Escribe un mensaje..." nick={currentUser} />
+     <MessageInput
+        bind:value={newMessage}
+        placeholder="Escribe un mensaje..."
+        onSend={sendMessage}
+      />
   </div>
   <!-- Menú lateral como hijo directo del flex -->
   {#if menuOpen}
-    <div class="flex flex-col w-64 h-full bg-slate-100 dark:bg-slate-950">
-  
+    <div class="flex flex-col justify-start w-50 h-full bg-slate-100 dark:bg-slate-950 ">
+      <span class="px-4 py-1 text-slate-400 dark:stroke-slate-600">Chat settings</span>
+      <Badges />
+      <Logout />
     </div>
   {/if}
 </div>

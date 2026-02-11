@@ -1,25 +1,9 @@
 <script lang="ts">
-import { UserTokenPersistence } from '$lib/tokenpersistence';
-import { goto } from '$app/navigation';
 import MenuToggle from '../MenuToggle/+page.svelte';
 
 export let open: boolean;
-function logout() {
-    UserTokenPersistence.clear();
-    goto("/Login");
-}
 </script>
-
-<nav class="flex items-center justify-between px-4 py-1 bg-slate-100 dark:bg-slate-950">  
-    <div class="flex items-center ">
-        <button 
-            on:click={logout} 
-            aria-label="Logout">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5">
-                    <path fill-rule="evenodd" d="M11.78 5.22a.75.75 0 0 1 0 1.06L8.06 10l3.72 3.72a.75.75 0 1 1-1.06 1.06l-4.25-4.25a.75.75 0 0 1 0-1.06l4.25-4.25a.75.75 0 0 1 1.06 0Z" clip-rule="evenodd" />
-                </svg>
-        </button>
-    </div>
+<nav class="flex items-center justify-end p-1 bg-slate-100 dark:bg-slate-950">  
     <div class="flex items-center">
         <MenuToggle bind:open={open} />
     </div>

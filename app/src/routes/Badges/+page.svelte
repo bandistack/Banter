@@ -1,0 +1,1 @@
+<span class="px-4 py-1">Badges</span>

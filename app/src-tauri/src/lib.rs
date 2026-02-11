@@ -10,7 +10,9 @@ pub fn run() {
             oauth::exchange_token,
             oauth::refresh_token,
             twitch::get_current_user,
-            twitch::start_twitch_chat
+            twitch::start_twitch_chat,
+            twitch::send_twitch_message,
+            twitch::logout
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
