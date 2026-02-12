@@ -1,19 +1,15 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
 
-async function loginWithTwitch(): Promise<void> {
+async function intw(): Promise<void> {
   console.log("hola")
-  const client_id = import.meta.env.VITE_TWITCH_CLIENT_ID;
-  const redirectUri = import.meta.env.VITE_TWITCH_REDIRECT_URI;
-  const scopes = import.meta.env.VITE_TWITCH_SCOPES;
   const params = new URLSearchParams({
     response_type: "code",
-    client_id: client_id,
-    redirect_uri: redirectUri,
-    scope: scopes,
+    client_id: "5nyrbmto67f2ni9srvookx5nen63pj",
+    redirect_uri: "http://localhost:1420/cback",
+    scope: "user:read:email chat:read chat:edit",
   });
   window.location.href = `https://id.twitch.tv/oauth2/authorize?${params.toString()}`;
-  goto("/Callback");
 }
 </script>
 <div class="flex flex-col h-screen w-screen justify-center items-center p-1 bg-slate-50 text-slate-900 dark:bg-slate-900 dark:text-slate-50">
@@ -21,7 +17,7 @@ async function loginWithTwitch(): Promise<void> {
   <!-- Contenedor en fila -->
   <div class="flex items-center gap-3">
     <button
-      on:click={loginWithTwitch}
+      on:click={intw}
       class="flex items-center gap-3 px-4 py-2 bg-purple-800 text-slate-50 rounded-sm hover:bg-purple-700 active:bg-purple-950 text-sm sm:text-base md:text-lg">
       <span class="leading-none font-normal">Log in with Twitch</span>
     </button>
