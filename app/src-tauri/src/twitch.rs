@@ -8,7 +8,6 @@ use crate::store::TokenStore;
 use tauri::Emitter;
 use std::collections::HashMap;
 use std::sync::atomic::{AtomicBool, Ordering};
-use tokio::task::JoinHandle;
 use tokio::sync::Mutex;
 use lazy_static::lazy_static;
 
