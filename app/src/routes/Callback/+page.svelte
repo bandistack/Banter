@@ -7,6 +7,7 @@
 
 onMount(async () => {
   const code = new URLSearchParams(window.location.search).get("code");
+  console.log("hola");
   if (code) {
     try {
       const token: UserToken = await invoke("exchange_token", { code });

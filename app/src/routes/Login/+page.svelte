@@ -1,5 +1,8 @@
 <script lang="ts">
+  import { goto } from "$app/navigation";
+
 async function loginWithTwitch(): Promise<void> {
+  console.log("hola")
   const client_id = import.meta.env.VITE_TWITCH_CLIENT_ID;
   const redirectUri = import.meta.env.VITE_TWITCH_REDIRECT_URI;
   const scopes = import.meta.env.VITE_TWITCH_SCOPES;
@@ -10,6 +13,7 @@ async function loginWithTwitch(): Promise<void> {
     scope: scopes,
   });
   window.location.href = `https://id.twitch.tv/oauth2/authorize?${params.toString()}`;
+  goto("/Callback");
 }
 </script>
 <div class="flex flex-col h-screen w-screen justify-center items-center p-1 bg-slate-50 text-slate-900 dark:bg-slate-900 dark:text-slate-50">
