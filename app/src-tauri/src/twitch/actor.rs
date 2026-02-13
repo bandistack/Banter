@@ -27,8 +27,18 @@ pub async fn connect(channel: String, app: AppHandle) -> Result<(), String> {
         return Err("Ya conectado".into());
     }
 
-    let token = TokenStore::instance().load()?.ok_or("Sin sesión")?.access_token;
+    let tokens = TokenStore::instance().load()?.ok_or("Sin sesión")?;
+    let token = tokens.access_token.clone();
+    let client_id = tokens.client_id.clone().ok_or("Sin client_id")?;
     let username = crate::twitch::user::current_user()?;
+
+    // Obtener broadcaster_id numérico para los badges del canal
+    let broadcaster_id = get_broadcaster_id(&client_id, &token, &username).await?;
+
+    // Cargar badges en caché (no bloqueante si falla)
+    if let Err(e) = crate::twitch::badges::load_badges(&client_id, &token, &broadcaster_id).await {
+        eprintln!("[badges] Error cargando badges: {e}");
+    }
 
     let ch = if channel.starts_with('#') {
         channel.to_lowercase()
@@ -40,6 +50,25 @@ pub async fn connect(channel: String, app: AppHandle) -> Result<(), String> {
     ACTOR.lock().await.channel = Some(ch.clone());
     tokio::spawn(run_loop(token, username, ch, app));
     Ok(())
+}
+
+async fn get_broadcaster_id(client_id: &str, token: &str, username: &str) -> Result<String, String> {
+    let client = reqwest::Client::new();
+    let resp = client
+        .get(format!("https://api.twitch.tv/helix/users?login={username}"))
+        .header("Client-Id", client_id)
+        .header("Authorization", format!("Bearer {token}"))
+        .send()
+        .await
+        .map_err(|e| e.to_string())?
+        .json::<serde_json::Value>()
+        .await
+        .map_err(|e| e.to_string())?;
+
+    resp["data"][0]["id"]
+        .as_str()
+        .map(|s| s.to_string())
+        .ok_or("No se pudo obtener broadcaster_id".into())
 }
 
 pub fn disconnect() {

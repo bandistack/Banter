@@ -2,6 +2,8 @@
   import { onMount } from "svelte";
   import { invoke } from "@tauri-apps/api/core";
   import { goto } from "$app/navigation";
+  import { get } from "svelte/store";
+  import { clid } from "$lib/credential";
 
   onMount(async () => {
     const hashParams = new URLSearchParams(window.location.hash.substring(1));
@@ -18,7 +20,8 @@
       }
       await invoke("chtk", {
         actk,
-        idtk
+        idtk,
+        clid: get(clid),   // ← enviamos el client_id al store de Rust
       });
       sessionStorage.removeItem("tw_oauth_state");
       sessionStorage.removeItem("tw_oauth_nonce");
@@ -29,6 +32,7 @@
     }
   });
 </script>
+
 <div class="flex h-screen w-screen items-center justify-center bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-50">
-    <div class="w-12 h-12 border-4 border-slate-900 dark:border-slate-50 border-t-transparent dark:border-t-transparent rounded-full animate-spin"></div>
+  <div class="w-12 h-12 border-4 border-slate-900 dark:border-slate-50 border-t-transparent dark:border-t-transparent rounded-full animate-spin"></div>
 </div>

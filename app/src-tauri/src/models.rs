@@ -5,6 +5,7 @@ pub struct OAuthTokens {
     pub access_token: String,
     pub id_token: Option<String>,
     pub scope: Option<Vec<String>>,
+    pub client_id: Option<String>,
 }
 
 impl OAuthTokens {
@@ -13,6 +14,7 @@ impl OAuthTokens {
             access_token,
             id_token: None,
             scope: None,
+            client_id: None,
         }
     }
 }
@@ -21,6 +23,7 @@ pub struct OAuthTokensBuilder {
     access_token: String,
     id_token: Option<String>,
     scope: Option<Vec<String>>,
+    client_id: Option<String>,
 }
 
 impl OAuthTokensBuilder {
@@ -35,11 +38,17 @@ impl OAuthTokensBuilder {
         self
     }
 
+    pub fn client_id(mut self, client_id: Option<String>) -> Self {
+        self.client_id = client_id;
+        self
+    }
+
     pub fn build(self) -> OAuthTokens {
         OAuthTokens {
             access_token: self.access_token,
             id_token: self.id_token,
             scope: self.scope,
+            client_id: self.client_id,
         }
     }
 }

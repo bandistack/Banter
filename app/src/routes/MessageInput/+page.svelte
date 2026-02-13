@@ -17,6 +17,6 @@
     on:click={onSend}
     class="bg-slate-200 dark:bg-slate-800 px-3 py-2 rounded-sm hover:bg-slate-300 hover:dark:bg-slate-700 active:bg-slate-100 active:dark:bg-slate-900 border-none"
   >
-    Send
+    <span class="text-slate-700 dark:text-slate-300">Send</span>
   </button>
 </div>

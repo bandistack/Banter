@@ -14,6 +14,8 @@ pub fn run() {
             twitch::commands::twitch_connect,
             twitch::commands::twitch_disconnect,
             twitch::commands::twitch_send,
+            twitch::badges::resolve_badges,
+            twitch::badges::reload_badges,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
