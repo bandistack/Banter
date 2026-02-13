@@ -1,39 +1,33 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { invoke } from "@tauri-apps/api/core";
-  import { goto } from '$app/navigation';
-  import { type UserToken } from "$lib/usertoken";
-  import { UserTokenPersistence } from "$lib/tokenpersistence";
+  import { goto } from "$app/navigation";
 
-onMount(async () => {
-  const code = new URLSearchParams(window.location.search).get("code");
-  console.log("hola");
-  if (code) {
+  onMount(async () => {
+    const hashParams = new URLSearchParams(window.location.hash.substring(1));
+    const actk = hashParams.get("access_token");
+    const idtk = hashParams.get("id_token");
+    const expectedNonce = sessionStorage.getItem("tw_oauth_nonce");
+
     try {
-      const token: UserToken = await invoke("exchange_token", { code });
-      UserTokenPersistence.save(token);
-      await invoke("get_current_user");
-      goto("/Chat");
+      if (idtk && expectedNonce) {
+        const payload = JSON.parse(atob(idtk.split(".")[1]));
+        if (payload.nonce !== expectedNonce) {
+          throw new Error("Invalid OAuth nonce");
+        }
+      }
+      await invoke("chtk", {
+        actk,
+        idtk
+      });
+      sessionStorage.removeItem("tw_oauth_state");
+      sessionStorage.removeItem("tw_oauth_nonce");
+      goto("/chat");
     } catch (err) {
       console.error("Error al validar token:", err);
-      UserTokenPersistence.clear();
-      goto("/Login");
-      return;
+      goto("/in");
     }
-  }
-  const existing = UserTokenPersistence.load();
-  if (existing) {
-    try {
-      await invoke("get_current_user"); // valida token en backend
-      goto("/Chat");
-      return;
-    } catch (err) {
-      console.error("Token inválido o expirado:", err);
-      UserTokenPersistence.clear();
-    }
-  }
-  goto("/Login");
-});
+  });
 </script>
 <div class="flex h-screen w-screen items-center justify-center bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-50">
     <div class="w-12 h-12 border-4 border-slate-900 dark:border-slate-50 border-t-transparent dark:border-t-transparent rounded-full animate-spin"></div>
